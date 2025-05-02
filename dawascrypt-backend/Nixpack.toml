@@ -1,0 +1,5 @@
+[build]
+  language = "python"
+  python_version = "3.9"
+  install_dependencies = "true"
+  build_command = "pip install -r requirements.txt"
