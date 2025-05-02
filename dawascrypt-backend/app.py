@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import base64
-import dawascrypt
+from dawascrypt import decrypt, determine_mode, encrypt
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -32,10 +32,10 @@ def encrypt_data():
         print(f"{mode_num}")
         
         # Determine encryption mode
-        mode = dawascrypt.determine_mode(mode_num)
+        mode = determine_mode(mode_num)
         
         # Encrypt the message
-        encrypted = dawascrypt.encrypt(key, message, mode)
+        encrypted = encrypt(key, message, mode)
         
         # Base64 encode the encrypted message for safe transport
         encoded = base64.b64encode(encrypted.encode('utf-8', errors='surrogateescape')).decode('utf-8')
@@ -73,13 +73,13 @@ def decrypt_data():
         mode_num = int(data["mode"])
         
         # Determine decryption mode
-        mode = dawascrypt.determine_mode(mode_num)
+        mode = determine_mode(mode_num)
         
         # Base64 decode the ciphertext
         ciphertext = base64.b64decode(encoded_ciphertext).decode('utf-8', errors='surrogateescape')
         
         # Decrypt the message
-        decrypted = dawascrypt.decrypt(key, ciphertext, mode)
+        decrypted = decrypt(key, ciphertext, mode)
         
         return jsonify({
             "plaintext": decrypted,
